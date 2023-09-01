@@ -16,10 +16,20 @@ def mainpage(request):
 class CreatorAPIView(APIView):
 
     def get(self, request):
-        lst = Creator.objects.all()
-        return Response(CreatorSerializer(lst, many=True).data)
+        query_params = request.query_params
+        creator = query_params.get('name', None)
 
-    def post(self, request, *args, **kwargs):
+        if creator is None:
+            return Response({'error': 'No name provided'})
+
+        lst = Creator.objects.filter(name=creator)
+
+        if lst.count() == 0:
+            return Response({'error': "name not found"})
+        else:
+            return Response(CreatorSerializer(lst, many=True).data)
+
+    def post(self, request):
         serializer = CreatorSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -29,7 +39,7 @@ class CreatorAPIView(APIView):
 
 class CountryAPIView(APIView):
 
-    def get(self, request):
+    def get(self, request):  # Если надо, сделать несколько стран в одном запросе, пока этого функционала нет
         query_params = request.query_params
 
         name = query_params.get('name', None)
@@ -37,4 +47,8 @@ class CountryAPIView(APIView):
             return Response({'error': 'No name provided'})
 
         lst = Creator.objects.filter(country=name)
-        return Response(CreatorSerializer(lst, many=True).data)
+
+        if lst.count() == 0:
+            return Response({'error': 'Country not found'})
+        else:
+            return Response(CreatorSerializer(lst, many=True).data)

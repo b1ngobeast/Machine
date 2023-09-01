@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class Countries(models.Model):
+class Country(models.Model):
     name = models.TextField(max_length=60)
 
     class Meta:

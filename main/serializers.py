@@ -1,27 +1,42 @@
 from rest_framework import serializers
-from main.models import Creator
+from main.models import Creator, Car
 
+
+class CountryForCreator(serializers.Serializer):  #При запросе производителя добавлять страну
+    country = serializers.CharField(max_length=60)
+
+
+class CarForCreator(serializers.Serializer):  #При запросе производителя добавлять авто
+    car = serializers.CharField()
 
 class CreatorSerializer(serializers.ModelSerializer):
     name = serializers.CharField(max_length=60)
-    country = serializers.CharField(max_length=60)
+
+    def get_country(self, lst):
+        queryset = Creator.objects.filter(name=lst)
+        return CountryForCreator(queryset, many=True).data
+  #Dont work now
+    # def get_car(self, lst):
+    #     queryset = Car.objects.filter(name=lst)
+    #     return CarForCreator(queryset, many=True).data
+
+
 
     class Meta:
         model = Creator
         fields = '__all__'
 
 
-class CreatorsForCountries(serializers.Serializer):  # Обработка создателей при запросе страны
+class CreatorForCountry(serializers.Serializer):  # Обработка создателей при запросе страны
     name = serializers.CharField(max_length=60)
 
 
-class CountriesSerializer(serializers.Serializer):
+class CountrySerializer(serializers.Serializer):
     name = serializers.CharField(max_length=60)
 
     def get_name(self, lst):
-        print(lst)
         queryset = Creator.objects.filter(country=lst)
-        return CreatorsForCountries(queryset, many=True).data
+        return CreatorForCountry(queryset, many=True).data
 
 
 class CarSerializer(serializers.Serializer):
