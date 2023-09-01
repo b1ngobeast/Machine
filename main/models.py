@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Countries(models.Model):
-    name = models.TextField(max_length=60, db_index=True)
+    name = models.TextField(max_length=60)
 
     class Meta:
         verbose_name = 'Страна',
@@ -17,7 +17,7 @@ class Creator(models.Model):
     country = models.TextField(max_length=60, help_text='Страна')
 
     class Meta:
-        verbose_name = 'Производитель',
+        verbose_name = 'Производитель'
         verbose_name_plural = 'Производители'
 
     def __str__(self):
@@ -31,7 +31,7 @@ class Car(models.Model):
     last_year = models.CharField(max_length=4, help_text='Окончание выпуска(если производится до сих пор - нв)')
 
     class Meta:
-        verbose_name = 'Машина',
+        verbose_name = 'Машина'
         verbose_name_plural = 'Машины'
 
     def __str__(self):
@@ -45,7 +45,7 @@ class Comment(models.Model):
     comment = models.TextField(max_length=500)
 
     class Meta:
-        verbose_name = 'Коммент',
+        verbose_name = 'Коммент'
         verbose_name_plural = 'Комменты'
 
     def __str__(self):
